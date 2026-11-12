@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/pyla-dev/pyla-profiles/schema/profile.schema.json",
+  "title": "PYLA profile rule set",
+  "description": "A PYLA importable rule set (JSONC: parse by stripping // and /* */ comments before validating).",
+  "type": "object",
+  "required": ["rules"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string", "maxLength": 100 },
+    "description": { "type": "string", "maxLength": 500 },
+    "enabled": { "type": "boolean", "default": true },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/rule" }
+    }
+  },
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "required": ["action"],
+      "additionalProperties": false,
+      "properties": {
+        "action": { "enum": ["allow", "deny", "reject", "limit"] },
+        "direction": { "enum": ["in", "out"], "default": "in" },
+        "interface": { "type": "string", "pattern": "^[A-Za-z0-9._:-]{1,15}$" },
+        "proto": { "enum": ["tcp", "udp", "any"], "default": "any" },
+        "src": { "$ref": "#/definitions/addr" },
+        "dst": { "$ref": "#/definitions/addr" },
+        "dport": { "type": "string", "pattern": "^([0-9]{1,5})(,[0-9]{1,5})*$|^([0-9]{1,5}:([0-9]{1,5}))?$" },
+        "log": { "enum": ["off", "log", "log-all"], "default": "off" },
+        "comment": { "type": "string", "maxLength": 120 },
+        "enabled": { "type": "boolean", "default": true }
+      },
+      "allOf": [
+        {
+          "$comment": "port lists or ranges require an explicit tcp/udp proto (UFW tuple model)",
+          "if": {
+            "required": ["dport"],
+            "properties": { "dport": { "pattern": "[,:]" } }
+          },
+          "then": {
+            "properties": { "proto": { "enum": ["tcp", "udp"] } }
+          }
+        }
+      ]
+    },
+    "addr": {
+      "type": "string",
+      "pattern": "^(any|(([0-9]{1,3}\\.){3}[0-9]{1,3}|([0-9A-Fa-f]{0,4}:){1,7}[0-9A-Fa-f]{0,4})(/[0-9]{1,3})?)$"
+    }
+  }
+}
