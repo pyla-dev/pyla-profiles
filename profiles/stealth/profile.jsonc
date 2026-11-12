@@ -33,6 +33,7 @@
 {
   "name": "Silent stealth",
   "description": "No port reachable from outside: inbound ICMP and orphan packets dropped, every closed port discards without answering. Outbound only to system services.",
+  "format_version": 1,
   "enabled": true,
   "rules": [
     // ---- loopback: local traffic stays free, it is what makes the machine run ----

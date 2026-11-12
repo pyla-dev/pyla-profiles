@@ -14,6 +14,7 @@
 {
   "name": "Home server",
   "description": "SSH and HTTPS open only to the management network; everything else dropped silently. Edit the source CIDR before applying.",
+  "format_version": 1,
   "enabled": true,
   "rules": [
     // ---- loopback: services bound to localhost (databases, monitoring agents,

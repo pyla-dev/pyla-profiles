@@ -15,6 +15,7 @@
 {
   "name": "Workstation laptop",
   "description": "Daily-driver baseline: full outbound, inbound only established/related, default-deny. SSH present but disabled.",
+  "format_version": 1,
   "enabled": true,
   "rules": [
     // ---- loopback: local services (databases, dev servers, sandboxed apps)
